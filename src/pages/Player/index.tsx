@@ -3,9 +3,18 @@ import { Header } from "./Header";
 import { Video } from "./Video";
 import { Module } from "./Module";
 import { useAppSelector } from "../../store";
+import { useCurrentLesson } from "../../store/slices/player";
+import { useEffect } from "react";
 
 export function Player() {
 	const modules = useAppSelector((state) => state.player.course.modules);
+
+	const { currentLesson } = useCurrentLesson();
+
+	// Easy, but react-helmet could be better some how?
+	useEffect(() => {
+		document.title = `${currentLesson.title} - MyPlayer`;
+	}, [currentLesson]);
 
 	return (
 		<div className="h-screen bg-zinc-950 text-zinc-50 flex justify-center items-center">
