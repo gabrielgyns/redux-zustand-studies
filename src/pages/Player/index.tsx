@@ -2,24 +2,19 @@ import { MessageCircle } from "lucide-react";
 import { Header } from "./Header";
 import { Video } from "./Video";
 import { Module } from "./Module";
-import { useAppSelector } from "../../store";
-import { start, useCurrentLesson } from "../../store/slices/player";
+import { useAppDispatch, useAppSelector } from "../../store";
+import { loadCourse, useCurrentLesson } from "../../store/slices/player";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { api } from "../../lib/axios";
 
 export function Player() {
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 
 	const modules = useAppSelector((state) => state.player.course?.modules);
 
 	const { currentLesson } = useCurrentLesson();
 
-	// Don't do like that in a real project, saga maybe? async thunk?
 	useEffect(() => {
-		api.get("/courses/1").then((response) => {
-			dispatch(start(response.data));
-		});
+		dispatch(loadCourse());
 	}, []);
 
 	// Easy, but react-helmet could be better some how?
