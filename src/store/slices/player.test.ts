@@ -165,6 +165,7 @@ describe("player slice", () => {
 		},
 		currentModuleIndex: 0,
 		currentLessonIndex: 0,
+		isLoading: false,
 	};
 
 	it("should be able to play a video", () => {

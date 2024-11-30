@@ -1,4 +1,4 @@
-import { MessageCircle } from "lucide-react";
+import { ChevronDown, MessageCircle } from "lucide-react";
 import { Header } from "./Header";
 import { Video } from "./Video";
 import { Module } from "./Module";
@@ -8,6 +8,8 @@ import { useEffect } from "react";
 
 export function Player() {
 	const dispatch = useAppDispatch();
+
+	const isCourseLoading = useAppSelector((state) => state.player.isLoading);
 
 	const modules = useAppSelector((state) => state.player.course?.modules);
 
@@ -23,6 +25,29 @@ export function Player() {
 			document.title = `${currentLesson?.title} - MyPlayer`;
 		}
 	}, [currentLesson]);
+
+	// This should be in Module maybe
+	const renderModuleSkeleton = () => (
+		<div>
+			<div className="flex w-full items-center gap-3 bg-zinc-800 p-4 animate-pulse">
+				<div className="flex h-10 w-10 rounded-full items-center justify-center bg-zinc-950 text-xs" />
+
+				<div className="flex flex-col gap-1 text-left">
+					<div className="w-20 h-4 bg-zinc-900 rounded" />
+					<div className="w-32 h-3 bg-zinc-900 rounded" />
+				</div>
+
+				<ChevronDown className="w-5 h-5 ml-auto text-zinc-400 group-data-[state=open]:rotate-180 transition-transform" />
+			</div>
+
+			<div className="relative flex flex-col gap-4 p-6">
+				<div className="w-full h-4 bg-zinc-800 rounded animate-pulse" />
+				<div className="w-full h-4 bg-zinc-800 rounded animate-pulse" />
+				<div className="w-full h-4 bg-zinc-800 rounded animate-pulse" />
+				<div className="w-full h-4 bg-zinc-800 rounded animate-pulse" />
+			</div>
+		</div>
+	);
 
 	return (
 		<div className="h-screen bg-zinc-950 text-zinc-50 flex justify-center items-center">
@@ -41,15 +66,16 @@ export function Player() {
 					</div>
 
 					<aside className="w-80 absolute top-0 bottom-0 right-0 border-l divide-y-2 divide-zinc-900 border-zinc-800 bg-zinc-900 overflow-y-scroll scrollbar-thin scrollbar-track-zinc-950 scrollbar-thumb-zinc-800">
-						{modules &&
-							modules.map((module, index) => (
-								<Module
-									key={module.id}
-									moduleIndex={index}
-									title={module.title}
-									amountOfLessons={module.lessons.length}
-								/>
-							))}
+						{isCourseLoading
+							? renderModuleSkeleton()
+							: modules?.map((module, index) => (
+									<Module
+										key={module.id}
+										moduleIndex={index}
+										title={module.title}
+										amountOfLessons={module.lessons.length}
+									/>
+							  ))}
 					</aside>
 				</main>
 			</div>
