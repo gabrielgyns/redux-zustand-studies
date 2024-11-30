@@ -2,22 +2,25 @@ import { ChevronDown, MessageCircle } from "lucide-react";
 import { Header } from "./Header";
 import { Video } from "./Video";
 import { Module } from "./Module";
-import { useAppDispatch, useAppSelector } from "../../store";
-import { loadCourse, useCurrentLesson } from "../../store/slices/player";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
+import { useCurrentLesson, useStore } from "../../store-zustand";
 
 export function Player() {
-	const dispatch = useAppDispatch();
-
-	const isCourseLoading = useAppSelector((state) => state.player.isLoading);
-
-	const modules = useAppSelector((state) => state.player.course?.modules);
+	const { course, load, isLoading } = useStore((store) => ({
+		course: store.course,
+		load: store.load,
+		isLoading: store.isLoading,
+	}));
 
 	const { currentLesson } = useCurrentLesson();
 
+	const handleLoad = useCallback(() => {
+		load();
+	}, [load]);
+
 	useEffect(() => {
-		dispatch(loadCourse());
-	}, []);
+		handleLoad();
+	}, [handleLoad]);
 
 	// Easy, but react-helmet could be better some how?
 	useEffect(() => {
@@ -66,9 +69,10 @@ export function Player() {
 					</div>
 
 					<aside className="w-80 absolute top-0 bottom-0 right-0 border-l divide-y-2 divide-zinc-900 border-zinc-800 bg-zinc-900 overflow-y-scroll scrollbar-thin scrollbar-track-zinc-950 scrollbar-thumb-zinc-800">
-						{isCourseLoading
+						{isLoading
 							? renderModuleSkeleton()
-							: modules?.map((module, index) => (
+							: course?.modules &&
+							  course?.modules.map((module, index) => (
 									<Module
 										key={module.id}
 										moduleIndex={index}
