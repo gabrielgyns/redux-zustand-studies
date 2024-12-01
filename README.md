@@ -18,3 +18,7 @@ Some didn't use Redux Thunks, only Redux Saga, so adapt yourself and study those
 Zustand in here is using version 4, but I notices that it's in version 5... and it had some major updates from this project... but you can follow some part of the documentation, it will help.
 
 I worked in a company that instead of having one big store, we had divided, like `usePreferencesStore`, `useOrganizationStore`, `useUserStore`, etc., in different files, I prefer this way.
+
+- [Persist](https://zustand.docs.pmnd.rs/middlewares/persist)
+- [How to Migrate to v5 from v4](https://zustand.docs.pmnd.rs/migrations/migrating-to-v5)
+
